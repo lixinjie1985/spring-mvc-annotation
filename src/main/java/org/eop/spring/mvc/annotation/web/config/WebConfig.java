@@ -13,7 +13,7 @@ import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConve
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
  * @author lixinjie
@@ -22,14 +22,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = {"org.eop.spring.mvc.annotation.web.controller", "org.eop.spring.mvc.annotation.web.exception.handler"})
-public class WebConfig implements WebMvcConfigurer {
+public class WebConfig extends WebMvcConfigurerAdapter {
 
 	//可以对已经注册的进行修改
 	//org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport
 	//org.springframework.web.servlet.config.annotation.DelegatingWebMvcConfiguration
 	@Override
 	public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
-		WebMvcConfigurer.super.extendMessageConverters(converters);
 		Optional<HttpMessageConverter<?>> jackson2 = converters.stream().filter(cvt -> cvt instanceof MappingJackson2HttpMessageConverter).findFirst();
 		if (jackson2.isPresent()) {
 			((MappingJackson2HttpMessageConverter)jackson2.get()).getObjectMapper().setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
